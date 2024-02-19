@@ -4,7 +4,7 @@
       <div class="container">
         <div class="loginList">
           <!-- 已登录状态 -->
-          <p v-if="$store.state.user.userInfo.name">
+          <p v-if="$store.state.user.userInfo.name" class="user-info">
             <!-- <a href="###">登录</a> -->
             <!-- <a href="javascript:;"></a> -->
             <router-link to="/account">{{$store.state.user.userInfo.name}}</router-link>
@@ -115,6 +115,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+@media (max-width: 768px) {
+  .user-info {
+    /* Styles specific to screens with a width of 600 pixels or less (e.g., smartphone styles) */
+    display: flex;
+    flex-direction: column;
+  }
+}
 //头部
 .header {
   & > .top {
@@ -186,4 +194,6 @@ export default {
     }
   }
 }
+
+
 </style>

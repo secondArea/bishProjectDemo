@@ -4,10 +4,10 @@
     <div class="container">
        
       <!-- 嵌套一个外层div,这样子就可以实现全部商品分类和item中不会移出鼠标 -->
-      <div @mouseleave="hideFirst" @mouseenter="showFirst">
-        <h2 class="all">全部商品分类</h2>
+      <div @mouseleave="hideFirst" @mouseenter="showFirst" class="container-sub">
+        <h2 class="all">目录</h2>
         <transition name="slide">
-        <div class="sort" v-show="isShowFirst">
+        <div class="sort">
           <!-- 利用事件委派跳转路由 -->
           <div class="all-sort-list2" @click="toSearch">
             <div
@@ -17,13 +17,9 @@
               :class="{ active: currentIndex == index }"
               @mouseenter="showCurrentItem(index)"
             >
-              <!-- 一级 -->
+    
               <h3>
-                <!-- <a href="">{{c1.categoryName}}</a> -->
-                <!-- 声明式导航  过多的组件产生 -->
-                <!-- <router-link :to="`/search?categoryName=${c1.categoryName}&category1Id=${c1.categoryId}`">{{c1.categoryName}}</router-link> -->
-                <!-- 编程式导航 非委派-->
-                <!-- <a href="javascript:;" @click="$router.push(`/search?categoryName=${c1.categoryName}&category1Id=${c1.categoryId}`)">{{ c1.categoryName }}</a> -->
+            
                 <a
                   href="javascript:;"
                   :data-categoryname="c1.categoryName"
@@ -31,61 +27,13 @@
                   >{{ c1.categoryName }}</a
                 >
               </h3>
-              <div class="item-list clearfix">
-                <div class="subitem">
-                  <dl
-                    class="fore"
-                    v-for="c2 in c1.categoryChild"
-                    :key="c2.categoryId"
-                  >
-                    <!-- 二级 -->
-                    <dt>
-                      <!-- <a href="">{{c2.categoryName}}</a> -->
-                      <!-- 声明式导航  过多的组件产生 -->
-                      <!-- <router-link :to="`/search?categoryName=${c2.categoryName}&category2Id=${c2.categoryId}`">{{c2.categoryName}}</router-link> -->
-                      <!-- 编程式导航 非委派-->
-                      <!-- <a href="javascript:;" @click="$router.push(`/search?categoryName=${c2.categoryName}&category2Id=${c2.categoryId}`)">{{ c2.categoryName }}</a> -->
-                      <a
-                        href="javascript:;"
-                        :data-categoryname="c2.categoryName"
-                        :data-category2Id="c2.categoryId"
-                        >{{ c2.categoryName }}</a
-                      >
-                    </dt>
-                    <dd>
-                      <!-- 三级 -->
-                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                        <!-- <a href="">{{c3.categoryName}}</a> -->
-                        <!-- 声明式导航  过多的组件产生-->
-                        <!-- <router-link :to="`/search?categoryName=${c3.categoryName}&category3Id=${c3.categoryId}`">{{c3.categoryName}}</router-link> -->
-                        <!-- 编程式导航 非委派-->
-                        <!-- <a href="javascript:;" @click="$router.push(`/search?categoryName=${c3.categoryName}&category3Id=${c3.categoryId}`)">{{ c3.categoryName }}</a> -->
-                        <a
-                          href="javascript:;"
-                          :data-categoryname="c3.categoryName"
-                          :data-category3Id="c3.categoryId"
-                          >{{ c3.categoryName }}</a
-                        >
-                      </em>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
+              
             </div>
           </div>
         </div>
          </transition>
       </div>
-      <!-- <nav class="nav">
-        <a href="###">服装城</a>
-        <a href="###">美妆馆</a>
-        <a href="###">尚品汇超市</a>
-        <a href="###">全球购</a>
-        <a href="###">闪购</a>
-        <a href="###">团购</a>
-        <a href="###">有趣</a>
-        <a href="###">秒杀</a>
-      </nav> -->
+      
     </div>
   </div>
 </template>
@@ -117,21 +65,17 @@ export default {
   methods: {
     /* 跳转搜索 */
     toSearch(event) {
-      //利用data自定义属性
-      let { categoryname, category1id, category2id, category3id } = event.target.dataset; //解构赋值
+    
+      let { categoryname, category1id} = event.target.dataset; 
       let query = {};
       //放入查询值
       if (categoryname) {
         query.categoryName = categoryname;
       }
-      //判断是哪一个分配查询的
+   
       if (category1id) {
         query.category1Id = category1id;
-      } else if (category2id) {
-        query.category2Id = category2id;
-      } else if (category3id) {
-        query.category3Id = category3id;
-      }
+      } 
       let opts={
         name: "search",
         query,
@@ -157,7 +101,7 @@ export default {
     /* 鼠标进入,显示一级分类 */
     showFirst(){
       this.currentIndex=-1;
-      this.isShowFirst=true;
+      // this.isShowFirst=true;
     },
     
     /* 鼠标移出去,隐藏一级分类 */
@@ -176,15 +120,18 @@ export default {
   border-bottom: 2px solid #e1251b;
 
   .container {
-    width: 1200px;
     margin: 0 auto;
     display: flex;
     position: relative;
 
+    .container-sub{
+      display: flex;
+    }
+
     .all {
-      width: 210px;
+      min-width:100px;
       height: 45px;
-      background-color: #e1251b;
+      background-color:var(--primary-color);
       line-height: 45px;
       text-align: center;
       color: #fff;
@@ -203,16 +150,8 @@ export default {
     }
 
     .sort {
-      //这里已经是终点了相当于
-      position: absolute;
-      left: 0;
-      top: 45px;
-      width: 210px;
-      height: 461px;
-      position: absolute;
       background: #fafafa;
-      z-index: 999;
-
+      display: flex;
       &.slide-enter,
       &.slide-leave-to{
         opacity: 0;
@@ -224,8 +163,15 @@ export default {
       }
 
       .all-sort-list2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         .item {
+          height: 100%;
           h3 {
+            display: flex;
+            align-items: center;
+            height: 100%;
             line-height: 30px;
             font-size: 14px;
             font-weight: 400;

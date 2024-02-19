@@ -34,4 +34,5 @@ export default {
 </script>
 
 <style>
+  @import './global-styles.css';
 </style>

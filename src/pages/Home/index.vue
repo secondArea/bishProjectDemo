@@ -1,13 +1,13 @@
 <template>
   <div>
     <Nav></Nav>
-    <ListContainer></ListContainer>
-    <TodayRecommend></TodayRecommend>
-    <Rank></Rank>
-    <Like></Like>
+    <!-- <ListContainer></ListContainer> -->
+    <!-- <TodayRecommend></TodayRecommend> -->
+    <!-- <Rank></Rank> -->
+    <!-- <Like></Like> -->
     <!-- 注册二个组件 -->
-    <Floor v-for="floor in floorList" :key="floor.id" :floor="floor"></Floor>
-    <Brand></Brand>
+    <!-- <Floor v-for="floor in floorList" :key="floor.id" :floor="floor"></Floor> -->
+    <!-- <Brand></Brand> -->
   </div>
 </template>
 
