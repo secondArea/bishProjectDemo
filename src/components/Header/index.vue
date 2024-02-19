@@ -35,22 +35,22 @@
         </router-link>
       </h1>
       <div class="searchArea">
-        <form action="###" class="searchForm">
-          <input
+        <el-form action="###" class="searchForm">
+          <el-input
             type="text"
             id="autocomplete"
             class="input-error input-xxlarge"
             v-model="searchKeyWord"
           />
+          
           <!-- 阻止表单的默认提交行为 -->
-          <button
-            class="sui-btn btn-xlarge btn-danger"
-            type="submit"
+          <el-button 
+            type="primary"
             @click.prevent="toSearch"
           >
             搜索
-          </button>
-        </form>
+          </el-button>
+        </el-form>
       </div>
     </div>
   </header>
@@ -181,17 +181,7 @@ export default {
             outline: none;
           }
         }
-        button {
-          height: 32px;
-          min-width: 68px;
-          background-color: #ea4a36;
-          border: none;
-          color: #fff;
-          cursor: pointer;
-          &:focus {
-            outline: none;
-          }
-        }
+       
       }
     }
   }

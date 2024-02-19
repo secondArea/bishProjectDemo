@@ -170,23 +170,6 @@ export default [
         path:'/account',
         name:"account",
         component:Account,
-        // // 路由独享守卫
-        beforeEnter:(to,from,next) =>{
-            //token存在
-            if(store.state.user.token){
-                //已登录 放行
-                next();
-                
-            }else{
-                //未登录返回主页
-                Message.error("请先登录")
-                next("/");
-            }
-        },
-        //元数据
-        meta:{
-            isHidenFooter:true
-        }
     },
     {
         //搜索商品

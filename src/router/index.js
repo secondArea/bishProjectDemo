@@ -79,7 +79,7 @@ router.beforeEach(async (to,from,next) => {
         }
     }else{
         //没有登录就跳转到我的订单页面了
-        if(to.name === "myorder"){
+        if(to.name === "myorder" || to.name === "account"){
             Message.warning("还没有登录,请先登录!");
             // 跳转到登录页面,并记录当前路径
             next("/login?redirect="+to.path);
