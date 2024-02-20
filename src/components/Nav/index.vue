@@ -9,7 +9,7 @@
         <transition name="slide">
         <div class="sort">
           <!-- 利用事件委派跳转路由 -->
-          <div class="all-sort-list2" @click="toSearch">
+          <div class="all-sort-list2">
             <div
               class="item"
               v-for="(c1, index) in baseCategoryList"
@@ -63,33 +63,7 @@ export default {
     }),
   },
   methods: {
-    /* 跳转搜索 */
-    toSearch(event) {
     
-      let { categoryname, category1id} = event.target.dataset; 
-      let query = {};
-      //放入查询值
-      if (categoryname) {
-        query.categoryName = categoryname;
-      }
-   
-      if (category1id) {
-        query.category1Id = category1id;
-      } 
-      let opts={
-        name: "search",
-        query,
-        params:this.$route.params
-      };
-      //跳转
-      if(this.$route.name=="search"){
-          this.$router.replace(opts);
-        }
-      this.$router.push(opts);
-      //隐藏
-      this.hideFirst();
-    },
-
     /* 显示当前指向的分类列表  */
     // 使用节流,隔一段时间就调用,注意不能使用箭头函数
     showCurrentItem:throttle(function(index){

@@ -34,24 +34,7 @@
             <p>主页</p>
         </router-link>
       </h1>
-      <div class="searchArea">
-        <el-form action="###" class="searchForm">
-          <el-input
-            type="text"
-            id="autocomplete"
-            class="input-error input-xxlarge"
-            v-model="searchKeyWord"
-          />
-          
-          <!-- 阻止表单的默认提交行为 -->
-          <el-button 
-            type="primary"
-            @click.prevent="toSearch"
-          >
-            搜索
-          </el-button>
-        </el-form>
-      </div>
+      
     </div>
   </header>
 </template>
@@ -61,7 +44,7 @@ export default {
   name: "Header",
   data() {
     return {
-      searchKeyWord: "",
+ 
     };
   },
   mounted(){
@@ -83,33 +66,8 @@ export default {
         this.$message.error("退出失败!"+error);
       }
     },
-    /* 清空搜索框 */
-    clearSearch(){
-      this.searchKeyWord="";
-    },
-    /* 提交搜索 */
-    toSearch() {
-      let { searchKeyWord } = this;
-      if (searchKeyWord.trim()) {
-        //如果当前头部所在组件为search
-        let opts={
-           name: "search",
-          params:{
-            keyword:searchKeyWord
-          },
-          //如果当前对象有query参数就传入
-          query:this.$route.query
-        };
-        if(this.$route.name=="search"){
-          this.$router.replace(opts);
-        }
-        this.$router.push(opts);
-        //清空输入内容
-        this.searchKeyWord="";
-      } else {
-        this.$message.warning("请输入完整的内容!");
-      }
-    },
+    
+   
   },
 };
 </script>

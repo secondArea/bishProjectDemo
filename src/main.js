@@ -23,6 +23,14 @@ import VueLazyload from "vue-lazyload";
 //表单验证
 import "@/plugins/validate";
 
+import MintUI from 'mint-ui';
+import 'mint-ui/lib/style.css';
+
+Vue.use(MintUI);
+
+import { Loadmore } from 'mint-ui';
+Vue.component(Loadmore.name, Loadmore);
+
 Vue.use(VueLazyload);
 //图片懒加载过渡图片
 const loadimage = require('@/assets/image/loading.gif')
