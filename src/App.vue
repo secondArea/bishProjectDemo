@@ -17,12 +17,11 @@ import "swiper/css/swiper.css"
 export default {
   name: "App",
   mounted(){
-    //获取三级分类
+ 
     this.$store.dispatch("getBaseCategoryList");
-    //获取路由
+  
     this.$store.dispatch("getBannerList");
-    //获取今日推荐
-    this.$store.dispatch("getRecommend");
+
     //获取Floor
     this.$store.dispatch("getFloor");
   },

@@ -2,7 +2,7 @@
   <div>
     <Nav></Nav>
     <ListContainer></ListContainer>
-    <!-- <TodayRecommend></TodayRecommend> -->
+  
     <!-- <Rank></Rank> -->
     <!-- <Like></Like> -->
     <!-- 注册二个组件 -->
@@ -14,7 +14,6 @@
 <script>
 // 组件
 import ListContainer from "@/pages/Home/ListContainer";
-import TodayRecommend from "@/pages/Home/TodayRecommend";
 import Rank from "@/pages/Home/Rank";
 import Like from "@/pages/Home/Like";
 import Floor from "@/pages/Home/Floor";
@@ -29,7 +28,6 @@ export default {
     Like,
     ListContainer,
     Rank,
-    TodayRecommend,
   },
   computed:{
     ...mapState({
