@@ -1,7 +1,7 @@
 <template>
   <div>
     <Nav></Nav>
-    <!-- <ListContainer></ListContainer> -->
+    <ListContainer></ListContainer>
     <!-- <TodayRecommend></TodayRecommend> -->
     <!-- <Rank></Rank> -->
     <!-- <Like></Like> -->

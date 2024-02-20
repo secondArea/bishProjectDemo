@@ -117,7 +117,7 @@ export default {
 
 <style lang="less" scoped>
 .type-nav {
-  border-bottom: 2px solid #e1251b;
+  border-bottom: 2px solid var(--primary-color);
 
   .container {
     margin: 0 auto;
