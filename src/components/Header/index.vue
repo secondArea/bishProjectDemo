@@ -4,18 +4,24 @@
       <div class="container">
         <div class="loginList">
           <!-- 已登录状态 -->
-          <p v-if="$store.state.user.userInfo.name" class="user-info">
+          <p v-if="$store.state.user.userInfo.username" class="user-info">
             <!-- <a href="###">登录</a> -->
             <!-- <a href="javascript:;"></a> -->
-            <router-link to="/account">{{$store.state.user.userInfo.name}}</router-link>
-            <a href="javascript:;" @click="loginOut" style="margin-left:10px">退出登录</a>
+            <router-link to="/account" style="margin-right:10px" class="user-info-box">
+              <div class="image-cotainer">
+                <img :src="$store.state.user.userInfo.avatar" :alt="$store.state.user.userInfo.username" class="avatar">
+              </div>
+              <div>{{$store.state.user.userInfo.username}}</div>
+              
+            </router-link>
+            <a href="javascript:;" @click="loginOut">退出登录</a>
           </p>
           <!-- 未登录 -->
           <p v-else>
             <span>请</span>
             <!-- <a href="###">登录</a> -->
             <router-link to="/login">登录</router-link>
-            <router-link to="/register" class="register">注册</router-link>
+
           </p>
         </div>
         <div class="typeList">
@@ -74,14 +80,19 @@ export default {
 
 <style lang="less" scoped>
 
-@media (max-width: 768px) {
+
   .user-info {
     /* Styles specific to screens with a width of 600 pixels or less (e.g., smartphone styles) */
     display: flex;
     flex-direction: column;
   }
-}
-//头部
+
+  .user-info-box{
+    display: flex;
+    align-items: center;
+  }
+
+
 .header {
   & > .top {
     background-color: #eaeaea;
@@ -151,6 +162,22 @@ export default {
       }
     }
   }
+}
+
+.image-cotainer {
+  width: 20px;  /* 设置容器的宽度 */
+  height: 20px; /* 设置容器的高度 */
+  overflow: hidden; /* 隐藏超出容器的部分 */
+
+  /* 将图片设置为圆形 */
+  border-radius: 50%;
+}
+
+.avatar {
+  width: 100%;   /* 图片占满容器宽度 */
+  height: 100%;  /* 图片占满容器高度 */
+  object-fit: cover; /* 保持图片比例并裁剪超出的部分 */
+  border-radius: 50%; /* 确保图片也是圆形 */
 }
 
 

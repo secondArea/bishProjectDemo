@@ -78,9 +78,10 @@ router.beforeEach(async (to,from,next) => {
             }
         }
     }else{
-        console.log(to,'totot');
+        const storedUserInfoStr = localStorage.getItem("userInfo");
+        const storedUserInfo =storedUserInfoStr ? JSON.parse(storedUserInfoStr) : {};
         //没有登录就跳转到我的订单页面了
-        if(to.name === "myorder" || to.name === "account"){
+        if((to.name === "myorder" || to.name === "account" || to.name === "shopcart") && !storedUserInfo.username){
             Message.warning("还没有登录,请先登录!");
             // 跳转到登录页面,并记录当前路径
             next("/login?redirect="+to.path);

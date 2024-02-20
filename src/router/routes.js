@@ -6,7 +6,7 @@ const Home = () => import("@/pages/Home")
 // }
 //路由懒加载模式
 const Login = () => import("@/pages/Login")
-const Register = () => import("@/pages/Register")
+
 const Search = () => import("@/pages/Search")
 const Detail = () => import("@/pages/Detail")
 const ProductDetail = () => import("@/pages/ProductDetail")
@@ -153,26 +153,7 @@ export default [
             }
         }
     },
-    {
-        path:'/register',
-        name:"register",
-        component:Register,
-        // // 路由独享守卫
-        beforeEnter:(to,from,next) =>{
-            //token存在
-            if(store.state.user.token){
-                //存在返回主页
-                next("/");
-            }else{
-                //不存在放行
-                next();
-            }
-        },
-        //元数据
-        meta:{
-            isHidenFooter:true
-        }
-    },
+  
     {
         path:'/account',
         name:"account",

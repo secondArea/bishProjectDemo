@@ -6,9 +6,6 @@
         <div class="loginform">
           <ul class="tab clearFix">
             <li>
-              <a href="##" style="border-right: 0;">扫描登录</a>
-            </li>
-            <li>
               <a href="##" class="current">账户登录</a>
             </li>
           </ul>
@@ -17,12 +14,12 @@
             <form action="##">
               <div class="input-text clearFix">
                 <span></span>
-                <!-- <input type="text" placeholder="邮箱/用户名/手机号" v-model="phone"> -->
-                <input type="text" placeholder="手机号" v-model="phone" name="phone"
-                  v-validate="{required: true,regex:/^1\d{10}$/}" :class="{invalid:errors.has('phone')}">
-                <div class="error-msg">{{errors.first("phone")}}</div>
+
+                <input type="text" placeholder="用户名" v-model="username" name="用户名"
+    v-validate="{ required: true }" :class="{ invalid: errors.has('用户名') }">
+  <div class="error-msg">{{ errors.first("用户名") }}</div>
               </div>
-              <div class="input-text clearFix">
+              <div class="input-text clearFix"> 
                 <span class="pwd"></span>
                 <!-- <input type="text" placeholder="请输入密码" v-model="password"> -->
                 <input type="password" autocomplete placeholder="请输入密码" v-model="password"
@@ -34,38 +31,13 @@
                   <input name="m1" type="checkbox" value="2" v-model="isKeepSecret" >
                   自动登录
                 </label>
-                <span class="forget">忘记密码？</span>
+ 
               </div>
-              <button class="btn" @click.prevent="login">登&nbsp;&nbsp;录</button>
+              <el-button  type="primary" class="btn" @click.prevent="login">登&nbsp;&nbsp;录</el-button>
             </form>
 
-            <div class="call clearFix">
-              <ul>
-                <li><img src="./images/qq.png" alt=""></li>
-                <li><img src="./images/sina.png" alt=""></li>
-                <li><img src="./images/ali.png" alt=""></li>
-                <li><img src="./images/weixin.png" alt=""></li>
-              </ul>
-              <router-link class="register" to="/register">立即注册</router-link>
-            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- 底部 -->
-    <div class="copyright">
-      <ul>
-        <li>关于我们</li>
-        <li>联系我们</li>
-        <li>联系客服</li>
-        <li>商家入驻</li>
-        <li>营销中心</li>
-        <li>手机尚品汇</li>
-        <li>销售联盟</li>
-        <li>尚品汇社区</li>
-      </ul>
-      <div class="address">地址：北京市昌平区宏福科技园综合楼6层</div>
-      <div class="beian">京ICP备19006430号
       </div>
     </div>
   </div>
@@ -76,31 +48,17 @@
     name: 'Login',
     data(){
       return {
-        phone:"",
+        username:"",
         password:"",
         // 是否保存信息
         isKeepSecret:false
       }
     },
     mounted(){
-      // 初始化登录信息
+   
       this.initInfo();
     },
-    // beforeRouterEnter(to,from,next){
-    //   // 在渲染该组件的对应路由被验证前调用
-    //   // 不能获取组件实例 `this` ！
-    //   // 因为当守卫执行时，组件实例还没被创建！
-    //   /* 所以这样子解决 */
-    //   next(vm=>{
-    //     if(vm.$store.state.user.token){
-    //       //token存在
-    //       next("/");
-    //     }else{
-    //       //不存在跳转登录
-    //       next();
-    //     }
-    //   });
-    // },
+   
     methods:{
       // 登录
       async login(){
@@ -109,12 +67,12 @@
           //未通过表单验证
           return;
         }
-        let { phone,password,isKeepSecret} = this;
-        if(phone && password){
+        let { username,password,isKeepSecret} = this;
+        if(username && password){
           //发送请求
           try {
             //不管有没有勾选,都设置为了存储,
-            await this.$store.dispatch("login",{phone,password,isKeepSecret});
+            await this.$store.dispatch("login",{username,password,isKeepSecret});
             // alert("登录成功!");
             this.$message.success("登录成功!");
             //如果之前有跳转,则跳转到之前页面,否者跳转到主页
@@ -136,11 +94,11 @@
             background: 'rgba(0, 0, 0, 0.3)'
           });
           //结构
-          let {phone,password} = result;
+          let {username,password} = result;
           //发送请求
           try {
             //不管有没有勾选,都设置为了存储,
-            await this.$store.dispatch("login",{phone,password});
+            await this.$store.dispatch("login",{username,password});
             // alert("登录成功!");
             this.$message.success("登录成功!");
             //如果之前有跳转,则跳转到之前页面,否者跳转到主页
@@ -160,22 +118,19 @@
 <style lang="less" scoped>
   .login-container {
     .login-wrap {
-      height: 487px;
-      background-color: #e93854;
 
+      display: flex;
+      justify-content: center;
       .login {
-        width: 1200px;
-        height: 487px;
         margin: 0 auto;
-        background: url(./images/loginbg.png) no-repeat;
       }
 
       .loginform {
-        width: 420px;
+        max-width: 420px;
         height: 406px;
         box-sizing: border-box;
         background: #fff;
-        float: right;
+
         top: 45px;
         position: relative;
         padding: 20px;
@@ -183,8 +138,7 @@
         .tab {
 
           li {
-            width: 50%;
-            float: left;
+            width: 100%;
             text-align: center;
 
             a {
@@ -202,16 +156,14 @@
             }
 
             .current {
-              border-bottom: none;
               border-top-color: #28a3ef;
-              color: #e1251b;
+              color: var(--primary-color);
             }
           }
         }
 
         .content {
-          width: 380px;
-          height: 316px;
+          max-width: 380px;
           box-sizing: border-box;
           border: 1px solid #ddd;
           border-top: none;
@@ -242,7 +194,7 @@
               }
 
               input {
-                width: 302px;
+                max-width: 302px;
                 height: 32px;
                 box-sizing: border-box;
                 border: 1px solid #ccc;
@@ -275,18 +227,9 @@
             }
 
             .btn {
-              background-color: #e1251b;
-              padding: 6px;
-              border-radius: 0;
-              font-size: 16px;
-              font-family: 微软雅黑;
-              word-spacing: 4px;
-              border: 1px solid #e1251b;
-              color: #fff;
               width: 100%;
               height: 36px;
               margin-top: 25px;
-              outline: none;
             }
           }
 
@@ -318,21 +261,7 @@
       }
     }
 
-    .copyright {
-      width: 1200px;
-      margin: 0 auto;
-      text-align: center;
-      line-height: 24px;
-
-      ul {
-        li {
-          display: inline-block;
-          border-right: 1px solid #e4e4e4;
-          padding: 0 20px;
-          margin: 15px 0;
-        }
-      }
-    }
+    
 
   }
 </style>

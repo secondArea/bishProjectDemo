@@ -14,6 +14,23 @@ export function reqBannerList() {
     return mockAjax.get("/cms/banner");
 }
 
+export const reqLogin = (userLoginInfo) => { 
+    return mockAjax.post("user/login", userLoginInfo);
+}
+/* token校验 */
+export const loginCheck = () => {
+    return mockAjax.get("user/checkToken");
+}
+
+
+/* 退出登录 */
+export const loginOut = () => {
+    return mockAjax.post("user/logout");
+}
+
+
+
+
 
 
 /* 获取搜索结果 */
@@ -51,18 +68,13 @@ export const reqCode = (phone) => {
 export const reqRegister = (info) => {
     return axios.post("/user/passport/register", info);
 }
-/* 用户登录 */
-export const reqLogin = (userLoginInfo) => {
-    return axios.post("/user/passport/login", userLoginInfo);
-}
-/* token校验 */
-export const loginCheck = () => {
-    return axios.get("/user/passport/auth/getUserInfo");
-}
-/* 退出登录 */
-export const loginOut = () => {
-    return axios.get("/user/passport/logout");
-}
+
+
+
+
+
+
+
 /* 获取订单交易页信息 */
 export const reqTradeInfo = () => {
     return axios.get("/order/auth/trade");

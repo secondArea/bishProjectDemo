@@ -61,16 +61,17 @@ const actions = {
     },
     // login
     async login({commit},info){
-        let {phone,password,isKeepSecret} = info;
-        let result = await reqLogin({phone,password});
+        let {username,password,isKeepSecret} = info;
+        let result = await reqLogin({username,password});
         // 判断返回的数据当中的状态码,而不是响应的状态码
         if(result.code == 200){
             //账号通过验证
+            console.log(result,'result');
             commit("SETTOKEN_USER",result.data.token);//存储token
             if(isKeepSecret){
                 //用户勾选了保存登录,那么就将账号密码保存到localStorage中
                 sessionStorage.setItem("AUTOLOGIN",JSON.stringify({
-                    phone,
+                    username,
                     password,
                 }))
             }
@@ -82,8 +83,8 @@ const actions = {
         }
     },
     // 获取验证码
-    async sendCode({commit},phone){
-        let result = await reqCode(phone);
+    async sendCode({commit},username){
+        let result = await reqCode(username);
         if(result.code == 200){
             Message.warning({
                 message:"您的验证码是:"+result.data,
