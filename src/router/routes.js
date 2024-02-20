@@ -9,6 +9,7 @@ const Login = () => import("@/pages/Login")
 const Register = () => import("@/pages/Register")
 const Search = () => import("@/pages/Search")
 const Detail = () => import("@/pages/Detail")
+const ProductDetail = () => import("@/pages/ProductDetail")
 const AddCarSuccess = () => import("@/pages/AddCartSuccess")
 const ShopCart = () => import("@/pages/ShopCart")
 const Trade = () => import("@/pages/Trade")
@@ -120,6 +121,12 @@ export default [
         path:"/detail/:skuId",
         name:"detail",
         component:Detail
+    },
+    {
+        //商品详情
+        path:"/productDetail/:id",
+        name:"productDetail",
+        component:ProductDetail
     },
     {
         //主页

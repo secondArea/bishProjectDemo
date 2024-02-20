@@ -92,21 +92,13 @@ export default {
         },
 
         fetchProducts() {
-            const dummyData = [];
-            for (let i = 1; i <= 18; i++) {
-                dummyData.push({
-                    id: i,
-                    name: `手机 ${i}`,
-                    price: parseFloat((Math.random() * (100 - 10) + 10).toFixed(2)),
-                    description: `Description ${i}`,
-                    inventory: Math.floor(Math.random() * 100) + 1,
-                });
-            }
+            const dummyData = this.$store.state.product.products
+            
 
             const filteredData = dummyData.filter(product => {
                 return product.name.includes(this.searchKeyWordFilter);
             });
-            console.log(filteredData,'filteredData');
+
             const start = (this.page - 1) * this.pageSize;
             const end = start + this.pageSize;
             const newData = filteredData.slice(start, end);
@@ -130,8 +122,8 @@ export default {
                 this.hasMore = true;
                 this.searchKeyWordFilter = ''
                 this.fetchProducts();
-                // 刷新完成后需要手动设置 refreshing 为 false，通知组件结束刷新状态
-                console.log(6666);
+        
+     
                 this.refreshing = false;
                 this.$refs.productListContainer.scrollTop = 0; // 返回顶部
 

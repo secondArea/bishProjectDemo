@@ -6,6 +6,7 @@ import {
   Button,
   Loading,
   Input,
+  InputNumber,
   Form,
   FormItem,
   Dialog,
@@ -35,6 +36,7 @@ Vue.use(Pagination);
 Vue.use(Button);
 Vue.use(Loading.directive);
 Vue.use(Input);
+Vue.use(InputNumber);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Dialog);
