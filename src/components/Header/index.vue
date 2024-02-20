@@ -18,7 +18,7 @@
           </p>
           <!-- 未登录 -->
           <p v-else>
-            <span>请</span>
+
             <!-- <a href="###">登录</a> -->
             <router-link to="/login">登录</router-link>
 
