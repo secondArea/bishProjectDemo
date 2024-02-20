@@ -22,8 +22,6 @@ export default {
   
     this.$store.dispatch("getBannerList");
 
-    //获取Floor
-    this.$store.dispatch("getFloor");
   },
   components: {
     Footer,

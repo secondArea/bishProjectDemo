@@ -1,7 +1,7 @@
 import {
     reqBaseCategoryList,
     reqBannerList,
-    reqFloor
+
 }  from "@/api"
 
 const state = {
@@ -26,10 +26,6 @@ const mutations = {
         state.bannerList=value;
     },
     
-    //Floor
-    REQFLOOR(state,value){
-        state.floorList=value;
-    }
 }
 const actions = {
     //获取三级分类
@@ -49,15 +45,6 @@ const actions = {
             commit("GETBANNERLIST",bannerList.data);
         }
     },
-
-    // 底部二个Floor
-    async getFloor({commit}){
-        let floorList = await reqFloor();
-        //注意获取对应的代码
-        if(floorList.code==200){
-            commit("REQFLOOR",floorList.data);
-        }
-    }
 }
 const getter = {
 

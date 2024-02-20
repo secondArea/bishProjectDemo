@@ -16,9 +16,6 @@ export function reqBannerList() {
 
 
 
-
-export const reqFloor = () => mockAjax("/floor"); //二个floor(假数据版)
-
 /* 获取搜索结果 */
 export const reqSearch = (searParams) => axios.post("/list", searParams);
 /* 获取商品详情 */
