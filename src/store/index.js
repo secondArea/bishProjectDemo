@@ -8,6 +8,7 @@ import detail from "./modules/detail"
 import shopcart from "./modules/shopcart"
 import trade from "./modules/trade"
 import product from './modules/product'
+import car from "./modules/car"
 Vue.use(vuex)
 const mutations = {
 
@@ -31,6 +32,7 @@ export default new vuex.Store({
         detail,
         shopcart,
         trade,
-        product
+        product,
+        car
     }
 })

@@ -13,11 +13,16 @@
 
         <!-- 添加购物车按钮 -->
         <el-button @click="addToCart">添加到购物车</el-button>
+        <ListContainer></ListContainer>
     </div>
 </template>
   
 <script>
+import ListContainer from "@/pages/ProductDetail/ListContainer";
 export default {
+    components: {
+        ListContainer,
+    },
     data() {
         return {
             product: {}, 
@@ -43,14 +48,22 @@ export default {
     },
     methods: {
         // 添加到购物车的方法
-        addToCart() {
+        async addToCart() {
             if (this.$store.state.user.token) {
-                // 在这里执行添加到购物车的逻辑，你可以使用Vuex来管理购物车状态
-                this.$message({
+                const {product,quantity} = this
+                try {
+                    await this.$store.dispatch("addToCart",{product,quantityToAdd:quantity});
+
+                    this.$message({
                     showClose: true,
                     message: `已添加 ${this.quantity} 件商品到购物车`,
                     type: 'success'
                 });
+                } catch (error) {
+                    console.log(error);
+                }
+
+                
             } else {
                 // 如果未登录，弹出登录提示
                 this.$message({

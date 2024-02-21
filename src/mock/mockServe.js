@@ -102,3 +102,203 @@ Mock.mock("/mock/user/logout", "post", () => {
         message: "退出登录成功"
     });
 });
+
+
+
+// 模拟购物车相关接口
+Mock.mock("/mock/cart/getShoppingCartData", "get", () => {
+    const shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+
+    return Mock.mock({
+        code: 200,
+        data: shoppingCart,
+        message: "获取购物车数据成功",
+    });
+});
+
+Mock.mock("/mock/cart/resetShoppingCart", "post", () => {
+    localStorage.removeItem("shoppingCart");
+
+    return Mock.mock({
+        code: 200,
+        message: "购物车重置成功"
+    });
+});
+
+Mock.mock("/mock/cart/addToCart", "post", (options) => {
+    const { product, quantityToAdd } = JSON.parse(options.body);
+    const quantity = quantityToAdd || 1; // 默认数量为1
+    const shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+
+    const existingItem = shoppingCart.find(item => item.id === product.id);
+    if (existingItem) {
+        const newQuantity = existingItem.quantity + quantity;
+
+        if (newQuantity <= product.inventory) {
+            const newshoppingCart = shoppingCart.map(item => {
+                if (item.id === existingItem.id) {
+                    return {
+                        ...existingItem,
+                        quantity: newQuantity,
+                    };
+                } else {
+                    return item
+                }
+            });
+
+            localStorage.setItem("shoppingCart", JSON.stringify(newshoppingCart));
+            return Mock.mock({
+                code: 200,
+                message: "商品数量增加成功",
+            });
+        } else {
+            return Mock.mock({
+                code: 400,
+                message: "商品数量超过库存上限",
+            });
+        }
+    } else {
+        if (quantity <= product.inventory) {
+            shoppingCart.push({
+                ...product,
+                quantity,
+            });
+            localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
+            return Mock.mock({
+                code: 200,
+                message: "商品成功添加到购物车",
+            });
+        } else {
+            return Mock.mock({
+                code: 400,
+                message: "商品数量超过库存上限",
+            });
+        }
+    }
+});
+
+Mock.mock("/mock/cart/removeFromCart", "post", (options) => {
+    const productId = JSON.parse(options.body);
+    let shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+    shoppingCart = shoppingCart.filter(item => item.id !== productId);
+    localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
+
+    return Mock.mock({
+        code: 200,
+        message: "商品成功从购物车中移除"
+    });
+});
+
+Mock.mock("/mock/cart/removeSelectedFromCart", "post", (options) => {
+    const selectedProductIds = JSON.parse(options.body);
+    let shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+
+    // 过滤掉选中的产品
+    shoppingCart = shoppingCart.filter(item => !selectedProductIds.includes(item.id));
+
+    localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
+
+    return Mock.mock({
+        code: 200,
+        message: "选中的商品成功从购物车中移除"
+    });
+});
+
+
+Mock.mock("/mock/cart/increaseQuantity", "post", (options) => {
+    const productId = JSON.parse(options.body);
+    let shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+    const existingItem = shoppingCart.find(item => item.id === productId);
+
+    if (existingItem && existingItem.quantity < existingItem.inventory) {
+        const newshoppingCart = shoppingCart.map(item => {
+            if(item.id == existingItem.id){
+                return {
+                    id: existingItem.id,
+                    name: existingItem.name,
+                    price: existingItem.price,
+                    quantity: existingItem.quantity++,
+                    description: existingItem.description,
+                    inventory:existingItem.inventory
+                }
+            }else{
+                return item;
+            }
+        })
+        localStorage.setItem("shoppingCart", JSON.stringify(newshoppingCart));
+        return Mock.mock({
+            code: 200,
+            message: "商品数量增加成功"
+        });
+    } else {
+        return Mock.mock({
+            code: 400,
+            message: "商品数量已达到库存上限"
+        });
+    }
+});
+
+Mock.mock("/mock/cart/decreaseQuantity", "post", (options) => {
+    const productId = JSON.parse(options.body);
+    let shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+    const existingItem = shoppingCart.find(item => item.id === productId);
+
+    if (existingItem && existingItem.quantity > 1) {
+        const newshoppingCart = shoppingCart.map(item => {
+            if(item.id == existingItem.id){
+                return {
+                    id: existingItem.id,
+                    name: existingItem.name,
+                    price: existingItem.price,
+                    quantity: existingItem.quantity--,
+                    description: existingItem.description,
+                    inventory:existingItem.inventory
+                }
+            }else{
+                return item;
+            }
+        })
+        localStorage.setItem("shoppingCart", JSON.stringify(newshoppingCart));
+        return Mock.mock({
+            code: 200,
+            message: "商品数量减少成功"
+        });
+    } else {
+        return Mock.mock({
+            code: 400,
+            message: "商品数量不能少于1"
+        });
+    }
+});
+
+Mock.mock("/mock/cart/updateQuantity", "post", (options) => {
+    const { productId, newQuantity } = JSON.parse(options.body);
+    let shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+    const existingItem = shoppingCart.find(item => item.id === productId);
+
+    if (existingItem && newQuantity >= 1 && newQuantity <= existingItem.inventory) {
+        const newShoppingCart = shoppingCart.map(item => {
+            if (item.id === existingItem.id) {
+                return {
+                    ...existingItem,
+                    quantity: newQuantity,
+                };
+            } else {
+                return item;
+            }
+        });
+
+        localStorage.setItem("shoppingCart", JSON.stringify(newShoppingCart));
+        return Mock.mock({
+            code: 200,
+            message: "商品数量修改成功",
+        });
+    } else {
+        return Mock.mock({
+            code: 400,
+            message: "无效的商品数量或已超过库存上限",
+        });
+    }
+});
+
+

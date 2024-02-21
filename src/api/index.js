@@ -22,11 +22,46 @@ export const loginCheck = () => {
     return mockAjax.get("user/checkToken");
 }
 
-
 /* 退出登录 */
 export const loginOut = () => {
     return mockAjax.post("user/logout");
 }
+
+
+
+//购物车相关
+export const reqGetShoppingCartData = () => {
+    return mockAjax.get("cart/getShoppingCartData");
+};
+
+export const reqResetShoppingCart = () => {
+    return mockAjax.post("cart/resetShoppingCart");
+};
+
+export const reqAddToCart = (productInfo) => {
+    return mockAjax.post("cart/addToCart", productInfo);
+};
+
+export const reqRemoveFromCart = (productId) => {
+    return mockAjax.post("cart/removeFromCart", productId);
+};
+
+export const reqRemoveSelectedFromCart = (selectedProductIds) => {
+    return mockAjax.post("cart/removeSelectedFromCart", selectedProductIds);
+};
+
+export const reqIncreaseQuantity = (productId) => {
+    return mockAjax.post("cart/increaseQuantity", productId);
+};
+
+export const reqDecreaseQuantity = (productId) => {
+    return mockAjax.post("cart/decreaseQuantity", productId);
+};
+
+export const reqUpdateQuantity = (updateInfo) => {
+    return mockAjax.post("cart/updateQuantity", updateInfo);
+};
+
 
 
 
@@ -68,11 +103,6 @@ export const reqCode = (phone) => {
 export const reqRegister = (info) => {
     return axios.post("/user/passport/register", info);
 }
-
-
-
-
-
 
 
 /* 获取订单交易页信息 */

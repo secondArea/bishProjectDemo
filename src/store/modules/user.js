@@ -66,7 +66,7 @@ const actions = {
         // 判断返回的数据当中的状态码,而不是响应的状态码
         if(result.code == 200){
             //账号通过验证
-            console.log(result,'result');
+
             commit("SETTOKEN_USER",result.data.token);//存储token
             if(isKeepSecret){
                 //用户勾选了保存登录,那么就将账号密码保存到localStorage中
@@ -82,28 +82,7 @@ const actions = {
             return Promise.reject(result.message);
         }
     },
-    // 获取验证码
-    async sendCode({commit},username){
-        let result = await reqCode(username);
-        if(result.code == 200){
-            Message.warning({
-                message:"您的验证码是:"+result.data,
-                duration:7000
-            })
-            console.log("您的验证码是:"+result.data);
-        }else{
-            Message.error("获取验证码失败!");
-        }
-    },
-    // 提交注册信息
-    async sendRegisterInfo({ commit }, info) {
-       let result = await reqRegister(info)
-       if(result.code == 200){
-           return "OK";
-       }else{
-           return Promise.reject(new Error(result.message));
-       }
-    }
+    
 }
 const getter = {
 
