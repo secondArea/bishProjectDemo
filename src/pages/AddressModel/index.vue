@@ -10,65 +10,75 @@
       :show-close	= "false"
       :modal="false"
       @open="handleOpen"
+      :width="dialogWidth"
     >
       <!-- :model="form" -->
-      <el-form>
-        <el-form-item label="收货人:" :label-width="formLabelWidth">
+      <el-form :rules="rules" :model="addressInfo" ref="ruleForm">
+        <el-form-item label="收货人:" :label-width="formLabelWidth" prop="consignee">
           <el-input
             autocomplete="off"
             v-model="addressInfo.consignee"
             class="input-item"
           ></el-input>
         </el-form-item>
-
-        <el-form-item label="联系电话:" :label-width="formLabelWidth">
+    
+        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="phoneNum">
           <el-input
             autocomplete="off"
             v-model="addressInfo.phoneNum"
             class="input-item"
           ></el-input>
         </el-form-item>
-
-        <el-form-item label="所在地区:" :label-width="formLabelWidth">
-          <!-- 华北,华中等 -->
+    
+        <el-form-item label="省份:" :label-width="formLabelWidth" prop="provinceId">
           <el-select
-            placeholder="请选择所在区域"
-            v-model="addressInfo.regionId"
+            placeholder="请选择省份"
+            v-model="addressInfo.provinceId"
+            @change="handleProvinceChange"
           >
             <el-option
-              :label="area.regionName"
-              :value="area.id"
-              v-for="area in regions"
-              :key="area.id"
+              :label="province.name"
+              :value="province.provinceId"
+              v-for="province in provinces"
+              :key="province.provinceId"
             ></el-option>
           </el-select>
-          <!-- 所属省份 -->
-          <el-select placeholder="请选择省份" v-model="addressInfo.provinceId">
+    
+          
+        </el-form-item>
+
+        <el-form-item label="城市:" :label-width="formLabelWidth" prop="cityId">
+          <!-- 选择城市 -->
+          <el-select
+            placeholder="请选择城市"
+            v-model="addressInfo.cityId"
+            prop="cityId"
+          >
             <el-option
-              :label="item.name"
-              :value="item.id"
-              v-for="item in provinces"
-              :key="item.id"
+              :label="city.cityName"
+              :value="city.cityId"
+              v-for="city in selectedProvince.cities"
+              :key="city.cityId"
             ></el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item label="详细地址:" :label-width="formLabelWidth">
+    
+        <el-form-item label="详细地址:" :label-width="formLabelWidth" prop="userAddress">
           <el-input
             autocomplete="off"
             v-model="addressInfo.userAddress"
             class="input-item special"
           ></el-input>
         </el-form-item>
-
-        <el-form-item label="是否设为默认地址:" :label-width="formLabelWidth">
+    
+        <el-form-item label="是否设为默认地址:" :label-width="formLabelWidth" prop="isDefault">
           <el-checkbox v-model="addressInfo.isDefault"></el-checkbox>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <!-- @click="dialogFormVisible = false" -->
-        <el-button @click="btnConfirm" type="primary">确 定</el-button>
-        <el-button @click="btnCancel">取 消</el-button>
+        <el-button @click="btnConfirm('ruleForm')" type="primary">确 定</el-button>
+        <el-button @click="btnCancel('ruleForm')">取 消</el-button>
         <!-- @click="dialogFormVisible = false" -->
       </div>
     </el-dialog>
@@ -89,18 +99,34 @@ export default {
         // 是否设置默认地址
         isDefault: false,
         //区域id
-        regionId: "",
-        //省份
         provinceId: "",
+        //省份
+        cityId: "",
         //详细地址
         userAddress: "",
       },
       //文本提示的长度
-      formLabelWidth: "130px",
+      formLabelWidth: window.innerWidth > 768 ? "130px" : "100px",
       //存储请求获取的区域代码
       regions: [],
-      //存储请求获取的省份代码
-      provinces: [],
+      addresses:[],
+      rules: {
+        consignee: [{ required: true, message: "请输入收货人", trigger: "blur" }],
+        phoneNum: [
+          { required: true, message: "请输入联系电话", trigger: "blur" },
+          {
+            pattern: /^[0-9]*$/,
+            message: "联系电话必须为数字",
+            trigger: "blur",
+          },
+        ],
+        provinceId: [{ required: true, message: "请选择省份", trigger: "change" }],
+        cityId: [{ required: true, message: "请选择城市", trigger: "change" }],
+        userAddress: [
+          { required: true, message: "请输入详细地址", trigger: "blur" },
+        ],
+      },
+      dialogWidth: window.innerWidth > 768 ? '50%' : '85%',
     };
   },
   props: {
@@ -111,17 +137,39 @@ export default {
     // 如果是修改地址,则该项会有值
     ...mapState({
       changAddressInfo: (state) => state.trade.changAddress,
+      provinces:(state) => state.trade.provinces
+      
     }),
+    selectedProvince() {
+      return this.provinces.find(province => province.provinceId === this.addressInfo.provinceId) || { cities: [] };
+    },
     // 区域id
-    regionId() {
-      return this.addressInfo.regionId;
+    provinceId() {
+      return this.addressInfo.provinceId;
+    },
+
+    responsiveWidth() {
+      // 在此可以根据需要调整计算逻辑
+      // 例如，可以使用 window.innerWidth 获取屏幕宽度
+      return window.innerWidth * 0.8 + "px";
     },
   },
   mounted() {
     //初始化获取区域地址
     this.getAddressInfo();
+
+    window.addEventListener('resize', this.handleResize);
+  },
+  destroyed() {
+    // Remove event listener when component is destroyed
+    window.removeEventListener('resize', this.handleResize);
   },
   methods: {
+    handleResize() {
+      // Update dialog width on window resize
+      this.dialogWidth = window.innerWidth > 768 ? '50%' : '85%';
+      this.formLabelWidth = window.innerWidth > 768 ? "130px" : "100px"  
+    },
     //阻止默认行为-滚动条的
     preventDefault(e){
       e.preventDefault();
@@ -177,25 +225,56 @@ export default {
       this.forbiddenScroll();
     },
     //取消按钮
-    btnCancel() {
+    btnCancel(formName) {
       //启用滚动条
+      this.resetForm(formName);
       this.enableScroll();
       //按下取消按钮,触发父类绑定的$on事件
       this.$emit("update:controlAddressShow", false);
     },
     //确认按钮
-    async btnConfirm() {
-      if (this.changAddressInfo.id) {
-        //存在,说明是修改地址信息
-        this.updateAddress();
-      } else {
-        //说明是添加地址
-        this.addAddress();
-      }
-      //启动滚动条
-      this.enableScroll();
-      //告诉父亲我操作了
-      this.$emit("confirmAddress");
+    async btnConfirm(formName) {
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          try {
+           
+            if (this.changAddressInfo.id) {
+              
+              //存在,说明是修改地址信息
+              await this.$store.dispatch("updateAddressInfo", this.addressInfo)
+            } else {
+              //说明是添加地址
+              await this.$store.dispatch("addAddressInfo", this.addressInfo)
+            }
+            //启动滚动条
+            this.resetForm(formName);
+            this.enableScroll();
+            //告诉父亲我操作了
+            this.$emit("confirmAddress");
+          } catch (error) {
+
+          }
+
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+
+    },
+
+    resetForm(formName) {
+      // 重置表单
+      this.$refs[formName].resetFields();
+      // 清空表单数据
+      this.addressInfo = {
+        consignee: '',
+        phoneNum: '',
+        provinceId: '',
+        cityId: '',
+        userAddress: '',
+        isDefault: false,
+      };
     },
     //添加地址
     async addAddress() {
@@ -208,7 +287,7 @@ export default {
           this.$message.success("添加地址信息成功!");
         } else {
           this.$message.warning("添加地址失败");
-          console.log(result);
+          
         }
       } catch (error) {
         this.$message.warning("请填写完整的值!");
@@ -230,25 +309,19 @@ export default {
         console.log(result);
       }
     },
-    //获取区域地址对应省份信息
-    async reqAddressBaseProvinceByRegionId(regionId) {
-      let result = await this.$API.reqAddressBaseProvinceByRegionId(regionId);
+    
+    async getAddressInfo() {
+      let result = await this.$store.dispatch("getAddressInfo")
       if (result.code == 200) {
-        this.provinces = result.data;
+        this.addresses = result.data;
       } else {
-        //  alert("获取地址省份信息失败,",result.message)
-        this.$message.error("获取地址省份信息失败");
+
       }
     },
-    //获取区域地址
-    async getAddressInfo() {
-      let result = await this.$API.reqAddressBaseRegion();
-      if (result.code == 200) {
-        this.regions = result.data;
-      } else {
-        this.$message.error("获取地址区域信息失败!" + result.message);
-        //   alert("获取地址区域信息失败,",result.message)
-      }
+
+    handleProvinceChange() {
+      // 省份切换时，将城市值重置为空或新省份的第一个城市
+      this.addressInfo.cityId = this.selectedProvince.cities[0].cityId; // 或者设置为新省份的第一个城市的值
     },
   },
   watch: {
@@ -259,54 +332,66 @@ export default {
           consignee,
           phoneNum,
           isDefault,
-          regionId,
           provinceId,
+          cityId,
           userAddress,
+          id,
         } = this.changAddressInfo;
         this.addressInfo = {
           consignee,
           phoneNum,
-          isDefault: isDefault === "1",
-          regionId,
+          isDefault,
           provinceId,
+          cityId,
           userAddress,
+          id
         };
       },
       deep: true,
     },
-    //区域改变
-    regionId() {
-      if (!this.regionId) return; //防止没有加载完成
-      //清空省份地址信息
-      this.provinces = [];
-      //清除选择的省份
-      // this.addressInfo.provinceId = "";
-      //重新发送获取省份地址的
-      this.reqAddressBaseProvinceByRegionId(this.regionId);
+
+    responsiveWidth(newWidth) {
+      this.dialogWidth = newWidth;
     },
+    
   },
 };
 </script>
 
 <style lang="less" scoped>
 .addressmodel-wrap {
-  // 模态框,element-ui的在这里有点bug
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,.3);
-  .el-dialog__wrapper{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  .el-dialog__wrapper {
     width: 100%;
     height: 100%;
   }
   .input-item {
-    width: 300px;
+    width: 100%; /* 使输入框在移动端充满父容器 */
     height: 20px;
     &.special {
-      width: 400px;
+      width: 100%; /* 调整特殊输入框宽度 */
     }
+  }
+}
+
+/* 添加移动端样式 */
+@media screen and (max-width: 767px) {
+  .addressmodel-wrap {
+    .input-item {
+      width: 100%;
+      &.special {
+        width: 100%;
+      }
+    }
+  }
+
+  .el-dialog{
+    width: 85% !important;
   }
 }
 </style>

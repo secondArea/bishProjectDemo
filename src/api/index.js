@@ -62,6 +62,27 @@ export const reqUpdateQuantity = (updateInfo) => {
     return mockAjax.post("cart/updateQuantity", updateInfo);
 };
 
+export const reqGetAddress = () => {
+    return mockAjax.get("address/getAddress");
+};
+
+
+export const reqAddAddress = (newAddress) => {
+    return mockAjax.post("address/addAddress", newAddress);
+};
+
+export const reqUpdateAddress = (updateAddress) => {
+    return mockAjax.post("address/updateAddress", updateAddress);
+};
+
+export const reqChangeDefaultAddress = (defaultAddress) => {
+    return mockAjax.post("address/changeDefaultAddress", defaultAddress);
+};
+
+export const reqDeletedAddress = (deletedAddress) => {
+    return mockAjax.post("address/deleteAddress", deletedAddress);
+};
+
 
 
 
