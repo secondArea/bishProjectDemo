@@ -241,10 +241,13 @@ export default {
             if (this.changAddressInfo.id) {
               
               //存在,说明是修改地址信息
-              await this.$store.dispatch("updateAddressInfo", this.addressInfo)
+              const resultAddressInfo = this.addProvinceAndCityInfo(this.addressInfo, this.provinces);
+              await this.$store.dispatch("updateAddressInfo", resultAddressInfo)
             } else {
               //说明是添加地址
-              await this.$store.dispatch("addAddressInfo", this.addressInfo)
+              const resultAddressInfo = this.addProvinceAndCityInfo(this.addressInfo, this.provinces);
+              
+              await this.$store.dispatch("addAddressInfo", resultAddressInfo)
             }
             //启动滚动条
             this.resetForm(formName);
@@ -262,6 +265,22 @@ export default {
       });
 
     },
+
+    addProvinceAndCityInfo(inputObj, provincesList) {
+      const provinceId = parseInt(inputObj.provinceId);
+      const cityId = parseInt(inputObj.cityId);
+
+      const province = provincesList.find(p => p.provinceId == provinceId);
+      if (province) {
+          const city = province.cities.find(c => c.cityId == cityId);
+          if (city) {
+              inputObj.provinceName = province.name;
+              inputObj.cityName = city.cityName;
+          }
+      }
+
+      return inputObj;
+  },
 
     resetForm(formName) {
       // 重置表单

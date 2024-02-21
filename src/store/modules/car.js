@@ -20,7 +20,7 @@ const mutations = {
         state.shoppingCart = [];
     },
 
-    UPDATE_SHOPPING_CART(state, payload) {
+    UPDATE_SHOPPING_CART(state) {
         state.shoppingCart = JSON.parse(localStorage.getItem("shoppingCart")) || []
     }
 };

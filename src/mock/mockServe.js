@@ -466,10 +466,11 @@ Mock.mock("/mock/order/getOrders", "get", () => {
 
     return Mock.mock({
         code: 200,
+        data: savedOrders,
         message: "获取订单列表成功",
-        orders: savedOrders
+        
     });
-});
+}); 
 
 
 // 模拟提交订单 API
@@ -477,12 +478,6 @@ Mock.mock("/mock/order/submitOrder", "post", (options) => {
     // 从请求参数中解析订单信息
     const orderInfo = JSON.parse(options.body);
 
-    // 生成一个随机8位整数作为订单号
-    const orderNumber = Math.floor(10000000 + Math.random() * 90000000);
-
-    // 将订单号和未付款状态添加到订单信息中
-    orderInfo.orderNumber = orderNumber;
-    orderInfo.status = 1;
 
     // 从本地存储中获取已存在的订单或初始化一个空数组
     let savedOrders = JSON.parse(localStorage.getItem("orders")) || [];
@@ -496,9 +491,8 @@ Mock.mock("/mock/order/submitOrder", "post", (options) => {
     return Mock.mock({
         code: 200,
         message: "订单提交成功",
-        orderNumber: orderNumber
     });
-});
+}); 
 
 // 模拟订单付款 API
 Mock.mock("/mock/order/payOrder", "post", (options) => {
@@ -529,4 +523,4 @@ Mock.mock("/mock/order/payOrder", "post", (options) => {
             message: "未找到要付款的订单"
         });
     }
-});
+}); 

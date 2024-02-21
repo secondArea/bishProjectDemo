@@ -5,12 +5,16 @@ import {
     reqAddAddress,
     reqUpdateAddress,
     reqChangeDefaultAddress,
-    reqDeletedAddress
+    reqDeletedAddress,
+    reqGetOrders,
+    reqSubmitOrder,
+    reqPayOrder
 } from "@/api"
 import {Message} from "element-ui"
 const state = {
     // tradeInfo:{},
     addressInfo:JSON.parse(localStorage.getItem("addresses")) || [],
+    orders:JSON.parse(localStorage.getItem("orders")) || [],
     changAddress:{},
     provinces:[
         {
@@ -49,9 +53,16 @@ const mutations = {
     RECEIVE_ADDRESSINFO(state,value){
         state.addressInfo = value;
     },
+    RECEIVE_ORDERS(state,value){
+        state.orders = value;
+    },
     GET_ADDTRESS_INFO(state){
         state.addressInfo = JSON.parse(localStorage.getItem("addresses")) || []
     },
+
+    GET_ORDERS(state){
+        state.orders = JSON.parse(localStorage.getItem("orders")) || []
+    }
 }
 const actions = {
     //用户修改地址信息暂存
@@ -110,6 +121,46 @@ const actions = {
         if(result.code == 200){
             Message.success('删除地址成功');
             commit("GET_ADDTRESS_INFO");
+        }else{
+            Message.error(result.message)
+
+        }
+    },
+
+
+    async getOrders({commit}){
+        let result = await reqGetOrders();//获取地址信息
+        console.log(result,'result');
+        if(result.code == 200){
+            // result.data.userAddressList = addressInfo.data || fakeAddress;空对象空数组也是真啊!
+            commit("RECEIVE_ORDERS",result.data);
+            return result.data
+        }else{
+            Message.error(result.message)
+
+        }
+    },
+
+    async submitOrder({commit},orderInfo){
+        let result = await reqSubmitOrder(orderInfo);//获取地址信息
+        if(result.code == 200){
+            // result.data.userAddressList = addressInfo.data || fakeAddress;空对象空数组也是真啊!
+            Message.success('提交订单成功');
+            commit("GET_ORDERS");
+            return result.data
+        }else{
+            Message.error(result.message)
+
+        }
+    },
+
+    async payOrder({commit},orderInfo){
+        let result = await reqPayOrder(orderInfo);//获取地址信息
+        if(result.code == 200){
+            // result.data.userAddressList = addressInfo.data || fakeAddress;空对象空数组也是真啊!
+            Message.success('付款成功');
+            commit("GET_ORDERS");
+            return result.data
         }else{
             Message.error(result.message)
 

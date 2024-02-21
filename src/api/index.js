@@ -84,6 +84,18 @@ export const reqDeletedAddress = (deletedAddress) => {
 };
 
 
+export const reqGetOrders = () => {
+    return mockAjax.get("order/getOrders");
+};
+
+export const reqSubmitOrder = (orderInfo) => {
+    return mockAjax.post("order/submitOrder", orderInfo);
+};
+
+export const reqPayOrder = (orderInfo) => {
+    return mockAjax.post("order/payOrder", orderInfo);
+};
+
 
 
 

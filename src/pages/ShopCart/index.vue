@@ -127,6 +127,13 @@ export default {
         //1.判断是否登录
         if(this.$store.state.user.token){
            //2.登录了直接跳转
+          const isSelected = this.shopCartList.some(function(item){
+            return item.isChecked;
+          });
+          if(!isSelected){
+            this.$message.warning("请先选择商品再下单哦~");
+            return;
+          }
           this.$router.push("/trade");
         }else{
             this.$message.warning("亲亲,请先登录后再下单哦~");

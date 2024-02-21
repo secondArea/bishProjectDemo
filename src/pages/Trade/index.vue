@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 10px;">
   <div class="trade-container">
     <h3 class="title">填写并核对订单信息</h3>
     <div class="content">
@@ -13,6 +13,8 @@
         <div class="address clearFix" v-for="(userAddress,index) in userAddressList" :key="userAddress.id" @click="changeDefault(userAddress)">
           <span class="username" :class="{selected:userAddress.isDefault}">{{userAddress.consignee}}</span>
           <p>
+            <span class="s1">{{userAddress.provinceName}}</span>
+            <span class="s2">{{userAddress.cityName}}</span>
             <span class="s1">{{userAddress.userAddress}}</span>
             <span class="s2">{{userAddress.phoneNum}}</span>
             <span class="s3" v-if="userAddress.isDefault">默认地址</span>
@@ -242,32 +244,80 @@
           return;
         }
         // let {tradeNo} = this.tradeInfo;
-        let {consignee,phoneNum,userAddress} = this.defaultUserAddress;
-        // 提交订单信息
+        let {consignee,phoneNum,userAddress,provinceName,cityName} = this.defaultUserAddress;
+        
+
+        const orderNumber = Math.floor(10000000 + Math.random() * 90000000);
+        function formatChineseDateTime(date) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const hours = String(date.getHours()).padStart(2, '0');
+          const minutes = String(date.getMinutes()).padStart(2, '0');
+          const seconds = String(date.getSeconds()).padStart(2, '0');
+
+          return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        let currentDate = new Date();
+        let formattedDate = formatChineseDateTime(currentDate);
+          // 提交订单信息
         let infoObj = {
           consignee:consignee,
           consigneeTel:phoneNum,
           deliveryAddress:userAddress,
-          orderDetailList:this.detailArrayList
+          orderDetailList:this.detailArrayList,
+          orderNumber,
+          orderDate:formattedDate,
+          status:1,
+          totalAccount:this.totalAccount,
+          provinceName,
+          cityName
+
         }
-        console.log(infoObj,'infoObj');
+        
         try {
-          // 提交订单信息
-          let result = await this.$API.reqOrderInfo(tradeNo,infoObj);
-          if(result.code == 200){
-            //提交订单成功
-            this.$message.success("提交订单成功!");
-            //跳转,附带orderId 订单号
-            this.$router.push("/pay?orderNo="+result.data);
-          }else{
-            //不能重复提交订单 status依旧为201!!!
-            this.$message.warning(result.message);
+          await this.$store.dispatch("submitOrder",infoObj)
+
+          const filterShopcart = JSON.parse(localStorage.getItem("shoppingCart")).filter(item => !item.isChecked)
+          localStorage.setItem("shoppingCart", JSON.stringify(filterShopcart));
+
+
+
+          
+          function updateInventoryAfterOrder(productList, orderList) {
+          for (const orderItem of orderList) {
+            const orderedProduct = productList.find(product => product.id === orderItem.id);
+
+            if (orderedProduct && orderedProduct.inventory >= orderItem.quantity) {
+              // 扣除库存
+              orderedProduct.inventory -= orderItem.quantity;
+          
+            } else {
+     
+            }
           }
-        } catch (error) {
-          //提交订单失败
-          this.$message.warning(error);
-          console.log(error);
+          // 返回更新后的产品列表
+          return productList;
         }
+
+        const productList = JSON.parse(localStorage.getItem("products"))
+        const newProductList = updateInventoryAfterOrder(productList, this.detailArrayList);
+        localStorage.setItem("products", JSON.stringify(newProductList));
+        this.$store.state.product.products = newProductList
+
+        this.$router.push("/pay?orderNo="+orderNumber);
+        } catch (error) {
+          
+        }
+        
+          
+            //提交订单成功
+        
+            //跳转,附带orderId 订单号
+        // this.$router.push("/pay?orderNo="+result.data);
+          
+       
         
       },
       // 改变默认地址
