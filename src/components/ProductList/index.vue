@@ -18,7 +18,7 @@
             <div class="productListItems">
                 <Product v-for="product in products" :key="product.id" :product="product" />
 
-                <div v-if="loading" class="loading-indicator">
+                <div v-if="loading && hasMore" class="loading-indicator">
                     <p>Loading...</p>
                 </div>
             </div>
@@ -52,20 +52,30 @@ export default {
     mounted() {
         this.fetchProducts();
         this.$nextTick(() => {
-            this.$refs.productListContainer.addEventListener('scroll', this.handleScroll);
+            // this.$refs.productListContainer.addEventListener('scroll', this.handleScroll);
+            window.addEventListener('scroll', this.handleScroll);
         });
     },
     beforeDestroy() {
-        this.$refs.productListContainer.removeEventListener('scroll', this.handleScroll);
+        // this.$refs.productListContainer.removeEventListener('scroll', this.handleScroll);
+        window.addEventListener('scroll', this.handleScroll);
     },
 
     methods: {
         handleScroll() {
-            const container = this.$refs.productListContainer;
+            // const container = this.$refs.productListContainer;
 
-            if (container.scrollTop + container.clientHeight >= container.scrollHeight - 1) {
+            // if (container.scrollTop + container.clientHeight >= container.scrollHeight - 1) {
+            //     this.loadMore();
+
+            // }
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+
+            if (scrollY + windowHeight >= documentHeight - 200 && !this.loading) {
+                // 在距离底部200像素时加载更多产品
                 this.loadMore();
-
             }
         },
         loadMore() {
@@ -161,8 +171,7 @@ export default {
 <style scoped>
 .productList {
     padding: 10px;
-    max-height: 600px;
-    overflow: auto;
+    
     margin: 10px 0;
 }
 
