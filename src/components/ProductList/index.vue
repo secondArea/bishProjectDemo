@@ -1,37 +1,46 @@
 <template>
     <div>
         <div class="searchArea">
-            <el-form action="###" class="searchForm">
+            <!-- <el-form action="###" class="searchForm">
                 <el-input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="searchKeyWord" />
 
    
                 <el-button type="primary" @click.prevent="toSearch">
                     搜索
                 </el-button>
-            </el-form>
+            </el-form> -->
         </div>
-        <div class="productList" ref="productListContainer" @scroll="handleScroll" @touchstart="handleTouchStart"
+        <vue-loadmore 
+            :on-refresh="onRefresh" 
+            :finished="finished"
+        >
+
+
+            <!-- <div class="productList" ref="productListContainer" @scroll="handleScroll" @touchstart="handleTouchStart"
             @touchmove="handleTouchMove" @touchend="handleTouchEnd">
             <div class="refresh-indicator" :class="{ refreshing }">
                 {{ refreshing ? '刷新中...' : '' }}
-            </div>
-            <div class="productListItems">
-                <Product v-for="product in products" :key="product.id" :product="product" />
+            </div> -->
+                <div class="productListItems">
+                    <Product v-for="product in products" :key="product.id" :product="product" />
 
-                <div v-if="loading && hasMore" class="loading-indicator">
-                    <p>Loading...</p>
+                    <div v-if="loading && hasMore" class="loading-indicator">
+                        <p>Loading...</p>
+                    </div>
                 </div>
-            </div>
-        </div>
+            <!-- </div> -->
+        </vue-loadmore>
     </div>
 </template>
   
 <script>
-import Product from '@/components/Product'; // 确保路径正确
+import Product from '@/components/Product'; 
+import { PullRefresh as MTPullRefresh } from 'mint-ui';
 
 export default {
     components: {
         Product,
+        'mt-pull-refresh': MTPullRefresh,
     },
     data() {
         return {
@@ -44,13 +53,29 @@ export default {
             moveY: 0,
             isTouchStart: false,
             refreshing: false,
-            searchKeyWord: '',
-            searchKeyWordFilter: ''
+            // searchKeyWordFilter: '',
+            finished: false
         };
+    },
+    computed: {
+        searchKeyWord() {
+        // 在这里动态计算搜索关键字
+        return this.$route.params.keyword;
+        }
+    },
+    watch: {
+    // 监听 searchKeyWord
+        searchKeyWord(newValue, oldValue) {
+            // 在这里可以进行一些逻辑处理
+            // 调用 fetchProducts 方法
+            this.page = 1
+            this.fetchProducts(newValue);
+        }
     },
 
     mounted() {
         this.fetchProducts();
+        
         this.$nextTick(() => {
             // this.$refs.productListContainer.addEventListener('scroll', this.handleScroll);
             window.addEventListener('scroll', this.handleScroll);
@@ -79,6 +104,7 @@ export default {
             }
         },
         loadMore() {
+            console.log(66666);
             if (this.hasMore && !this.loading) {
                 this.loading = true
                 setTimeout(() => {
@@ -90,23 +116,26 @@ export default {
             }
         },
 
-        toSearch() {
-            if(this.searchKeyWord.trim()){
-                this.page = 1
-                this.searchKeyWordFilter = this.searchKeyWord;
-                this.fetchProducts();
-                // 清空搜索关键字
-                this.searchKeyWord = '';
-            }
+        // toSearch() {
+        //     if(this.searchKeyWord.trim()){
+        //         this.page = 1
+        //         this.searchKeyWordFilter = this.searchKeyWord;
+        //         this.fetchProducts();
+        //         // 清空搜索关键字
+        //         this.searchKeyWord = '';
+        //     }
             
-        },
+        // },
 
         fetchProducts() {
             const dummyData = this.$store.state.product.products
             
 
             const filteredData = dummyData.filter(product => {
-                return product.name.includes(this.searchKeyWordFilter);
+                if(this.searchKeyWord){
+                    return product.name.includes(this.searchKeyWord);
+                }
+                return true
             });
 
             const start = (this.page - 1) * this.pageSize;
@@ -124,20 +153,20 @@ export default {
             }
         },
 
-        onRefresh() {
+        onRefresh(done) {
             // 模拟请求延时效果
             setTimeout(() => {
                 // 下拉刷新触发时的处理
                 this.page = 1;
                 this.hasMore = true;
-                this.searchKeyWordFilter = ''
+                // this.searchKeyWordFilter = ''
                 this.fetchProducts();
         
      
-                this.refreshing = false;
-                this.$refs.productListContainer.scrollTop = 0; // 返回顶部
-
-            }, 1000); // 假设请求需要1秒钟
+                this.finished = false;
+                // this.$refs.productListContainer.scrollTop = 0;
+                done();
+            }, 0); // 假设请求需要1秒钟
         },
 
         handleTouchStart(event) {

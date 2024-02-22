@@ -19,9 +19,18 @@
 <script>
   export default {
     name: 'PaySuccess',
+    data(){
+      return {
+        orderNo:"",
+      }
+    },
+    beforeMount(){
+      //获取订单编号
+      this.orderNo = this.$route.params.orderNo;
+    },
     methods:{
       look(){
-        this.$router.push('/account')
+        this.$router.push(`/orderDetail/${this.orderNo}`) 
       },
       goToShoo(){
         this.$router.push('/')

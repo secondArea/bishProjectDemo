@@ -93,7 +93,7 @@
           async getOrderInfo(){
             try {
               let result = await this.$store.dispatch('getOrders');    
-              this.orders = result;
+              this.orders = result.reverse();
             } catch (error) {
               this.$message.error(error);
             }

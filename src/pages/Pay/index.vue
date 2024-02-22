@@ -60,7 +60,7 @@
       async payMoney(){
         try {
           await this.$store.dispatch('payOrder',this.orderInfo); 
-          this.$router.push("/paysuccess");
+          this.$router.push(`/paysuccess/${this.orderNo}`);
         } catch (error) {
           this.$message.error(error);
         }

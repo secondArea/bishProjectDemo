@@ -280,9 +280,8 @@
           await this.$store.dispatch("submitOrder",infoObj)
 
           const filterShopcart = JSON.parse(localStorage.getItem("shoppingCart")).filter(item => !item.isChecked)
-          localStorage.setItem("shoppingCart", JSON.stringify(filterShopcart));
-
-
+          localStorage.setItem("shoppingCart", JSON.stringify(filterShopcart)); 
+          this.$store.commit('UPDATE_SHOPPING_CART');
 
           
           function updateInventoryAfterOrder(productList, orderList) {

@@ -29,7 +29,8 @@ export default [
         component:Pay,
         //只有从交易页面(创建订单)页面才能跳转到支付页面
         beforeEnter:(to,from,next) => {
-            if(from.path === '/trade' || from.path === '/account' || from.path === '/orderDetail'){
+            console.log(from.path,'from.path ');
+            if(from.path === '/trade' || from.path === '/account' || from.path.includes('orderDetail')){
                 next();
             }else{
                 Message.error("只有从交易页面(创建订单)页面或个人中心页面才能跳转到支付页面");
@@ -39,7 +40,7 @@ export default [
     },
     {
         //支付成功界面
-        path:"/paysuccess",
+        path:"/paysuccess/:orderNo",
         name:"paysuccess",
         component:PaySuccess,
         // 只有从支付页面才能跳转到支付成功页面

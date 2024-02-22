@@ -16,6 +16,7 @@ import {
   Checkbox,
   Popover,
   Popconfirm,
+  Badge,
   ElContainer, 
   ElHeader, 
   ElMain, 
@@ -46,6 +47,7 @@ Vue.use(OptionGroup);
 Vue.use(Checkbox);
 Vue.use(Popover);
 Vue.use(Popconfirm);
+Vue.use(Badge);
 
 //配置对象(全局配置)
 Vue.prototype.$message = function (option) {
