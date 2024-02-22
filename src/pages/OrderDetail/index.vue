@@ -1,25 +1,6 @@
 <template>
-  <div class="accountRoot">
-    <div class="account">
-        <h2>{{ userInfo.username}}</h2>
-        <img :src="userInfo.avatar" alt="User Avatar" style="max-width: 100px; max-height: 100px; border-radius: 50%;">
-        
-        <!-- <div v-if="userInfo.orders.length > 0">
-          <h3>订单数据：</h3>
-          <ul>
-            <li v-for="(order, index) in userInfo.orders" :key="index">{{ order }}</li>
-          </ul>
-        </div> -->
-        <el-button  @click="loginOut">退出登录</el-button>
-        
-
-    </div>
-    <div class="order-list">
-      <h3 v-if="orders.length === 0">暂无订单</h3>
-      <div v-else>
-        <h3 style="text-align: center;">订单列表：</h3>
-      </div>
-      <div v-for="(order, index) in orders" :key="index" class="order-item">
+    <div class="orderDetaiRoot">
+    <div class="order-item">
         <div class="order-header">
           <span>订单编号：{{ order.orderNumber }}</span>
           <span>状态：{{ order.status === 1 ? '未付款' : '已付款' }}</span>
@@ -46,106 +27,72 @@
             <p>总计：￥{{ order.totalAccount }}</p>
             <p>下单时间：{{ order.orderDate }}</p>
           </div>
-          <div class="order-action">
-            <el-button size="small" v-if="order.status == 1" type="primary" @click.stop="payOrder(order.orderNumber)">付款</el-button>
-            <el-button size="small" @click.stop="viewOrder(order.orderNumber)">立即查看</el-button>
+          <div class="order-action" v-if="order.status == 1">
+            <el-button size="small"  type="primary" @click.stop="payOrder(order.orderNumber)">付款</el-button>
           </div>
         </div>
       </div>
     </div>
-  </div>
   </template>
   
   <script>
-
   export default {
     data() {
       return {
-        userInfo: {},
-        orders:[]
+        orderNo:'',
+        order:{},
       };
     },
-
-    mounted() {
-      this.loadUserInfo();
+    beforeMount(){
+      //获取订单编号
+      this.orderNo = this.$route.params.orderNumber;
+    },
+    mounted(){
+      //do something
       this.getOrderInfo();
     },
-      methods: {
-          loadUserInfo() {
-              // 尝试从localStorage中获取userInfo
-              const localStorageUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+    methods:{
 
-              // 如果localStorage中存在userInfo，则使用它；否则，使用Vuex中的userInfo
-              this.userInfo = localStorageUserInfo || this.$store.state.user.userInfo;
-          },
-          async loginOut() {
-              try {
-                  await this.$store.dispatch("setLoginOut");
-                  this.$message.success("退出登录成功!");
-                  //回到主页
-                  this.$router.push("/");
-              } catch (error) {
-                  this.$message.error("退出失败!" + error);
-              }
-          },
-
-
-          async getOrderInfo(){
+     
+      // 获取订单信息
+      async getOrderInfo(){
             try {
               let result = await this.$store.dispatch('getOrders');    
-              this.orders = result;
+              this.order = result.find(item => item.orderNumber == this.orderNo);
             } catch (error) {
               this.$message.error(error);
             }
 
             
-          },
+        },
 
-          viewProduct(id){
+        viewProduct(id){
             this.$router.push(`/productDetail/${id}`);
-          },
+        },
 
-          payOrder(orderNumber){
+        payOrder(orderNumber){
             this.$router.push("/pay?orderNo="+orderNumber);
-          },
-
-          viewOrder(orderNumber){
-            this.$router.push(`/orderDetail/${orderNumber}`);
-          }
-      },
+        },
+    },
   };
   </script>
-
-<style scoped>
-
-  .accountRoot{
-    margin: 50px 0;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 15px;
-  }
-
-  .account{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
-
-    gap: 30px;
-  }
-
-  .order-list {
-    max-width: 700px;
-    
-  }
   
+  <style scoped>
+
+  .orderDetaiRoot{
+    padding: 10px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
   .order-item {
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
-    margin-top: 20px;
+    max-width: 700px;
+    width: 100%;
   }
   
   .order-header {
@@ -194,5 +141,5 @@
       padding: 15px;
     }
   }
-</style>
+  </style>
   

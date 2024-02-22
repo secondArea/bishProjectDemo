@@ -130,7 +130,6 @@ const actions = {
 
     async getOrders({commit}){
         let result = await reqGetOrders();//获取地址信息
-        console.log(result,'result');
         if(result.code == 200){
             // result.data.userAddressList = addressInfo.data || fakeAddress;空对象空数组也是真啊!
             commit("RECEIVE_ORDERS",result.data);

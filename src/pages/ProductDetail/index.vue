@@ -49,7 +49,9 @@ export default {
     methods: {
         // 添加到购物车的方法
         async addToCart() {
-            if (this.$store.state.user.token) {
+            const storedUserInfoStr = localStorage.getItem("userInfo");
+            const storedUserInfo =storedUserInfoStr ? JSON.parse(storedUserInfoStr) : {};
+            if (storedUserInfo.username) { 
                 const {product,quantity} = this
                 try {
                     await this.$store.dispatch("addToCart",{product,quantityToAdd:quantity});

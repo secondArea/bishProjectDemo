@@ -26,7 +26,7 @@
         </div>
         <div class="typeList">
           <router-link to="/account">个人中心</router-link>
-          <router-link to="/center">我的订单</router-link>
+          <router-link to="/account">我的订单</router-link>
           <router-link to="/shopcart">我的购物车</router-link>
           
         

@@ -21,7 +21,7 @@
     name: 'PaySuccess',
     methods:{
       look(){
-        this.$router.push('/center')
+        this.$router.push('/account')
       },
       goToShoo(){
         this.$router.push('/')

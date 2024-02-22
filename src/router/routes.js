@@ -8,44 +8,20 @@ const Home = () => import("@/pages/Home")
 const Login = () => import("@/pages/Login")
 
 const Search = () => import("@/pages/Search")
-const Detail = () => import("@/pages/Detail")
+
 const ProductDetail = () => import("@/pages/ProductDetail")
-const AddCarSuccess = () => import("@/pages/AddCartSuccess")
 const ShopCart = () => import("@/pages/ShopCart")
 const Trade = () => import("@/pages/Trade")
-const Center = () => import("@/pages/Center")
 const Pay = () => import("@/pages/Pay")
 const PaySuccess = () => import("@/pages/PaySuccess")
-const MyOrder = () => import("@/pages/Center/MyOrder")
-const OrderGroup = () => import("@/pages/Center/OrderGroup")
 const NotFound = () => import("@/pages/404");//404页面
 const Account = () => import("@/pages/Account");
+const OrderDetail = () => import("@/pages/OrderDetail");
+
 import {Message} from "element-ui"
 import store from "@/store/index.js"
 export default [
-    {
-        
-        //我的订单/个人中心
-        path:"/center",
-        component:Center,
-        children:[
-            {
-                path:"myorder",
-                name:"myorder",
-                component:MyOrder
-            },
-            {
-                path:"ordergroup",
-                name:"ordergroup",
-                component:OrderGroup
-            },
-            //二级路由重定向
-            {
-                path:"",
-                redirect:"myorder"
-            }
-        ]
-    },
+
     {
         //支付界面
         path:"/pay",
@@ -53,10 +29,10 @@ export default [
         component:Pay,
         //只有从交易页面(创建订单)页面才能跳转到支付页面
         beforeEnter:(to,from,next) => {
-            if(from.path === '/trade'){
+            if(from.path === '/trade' || from.path === '/account' || from.path === '/orderDetail'){
                 next();
             }else{
-                Message.error("只有从交易页面(创建订单)页面才能跳转到支付页面");
+                Message.error("只有从交易页面(创建订单)页面或个人中心页面才能跳转到支付页面");
                 next("/");
             }
         }
@@ -99,30 +75,6 @@ export default [
         component:ShopCart
     },
     {
-        //添加购物车成功
-        path:"/addcartsuccess",
-        name:"addcartsuccess",
-        component:AddCarSuccess,
-        // 只有携带了skuNum和sessionStorage内部有skulnfo数据才能看到添加购物车成功的界面
-        beforeEnter:(to,from,next) => {
-            let skuNum = to.query.skuNum;
-            let skuInfo = sessionStorage.getItem("SKUINFO_KEY");
-            if(skuNum && skuInfo){
-                //均存在值
-                next();//放行
-            }else{
-                Message.error("只有携带了skuNum和sessionStorage内部有skulnfo数据才能看到添加购物车成功的界面")
-                next("/");
-            }
-        }
-    },
-    {
-        //商品详情
-        path:"/detail/:skuId",
-        name:"detail",
-        component:Detail
-    },
-    {
         //商品详情
         path:"/productDetail/:id",
         name:"productDetail",
@@ -158,6 +110,11 @@ export default [
         path:'/account',
         name:"account",
         component:Account,
+    },
+    {
+        path:'/orderDetail/:orderNumber',
+        name:"orderDetail",
+        component:OrderDetail,
     },
     {
         //搜索商品

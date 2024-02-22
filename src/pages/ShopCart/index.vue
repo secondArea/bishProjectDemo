@@ -125,7 +125,9 @@ export default {
     //用户单击去结算界面
     toTrade(){
         //1.判断是否登录
-        if(this.$store.state.user.token){
+        const storedUserInfoStr = localStorage.getItem("userInfo");
+        const storedUserInfo =storedUserInfoStr ? JSON.parse(storedUserInfoStr) : {};
+        if(storedUserInfo.username){ 
            //2.登录了直接跳转
           const isSelected = this.shopCartList.some(function(item){
             return item.isChecked;
