@@ -41,7 +41,7 @@ export default {
         getProductById: {
             immediate: true,
             handler(newVal) {
-                console.log('Product:', newVal);
+
                 this.product = newVal;
             }
         }

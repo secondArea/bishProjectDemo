@@ -7,7 +7,7 @@ import {Message} from "element-ui";
 Vue.use(VueRouter);
 
 const originalPush = VueRouter.prototype.push;
-//解决重复提交相同链接报错
+
 VueRouter.prototype.push = function push(location, onResolve, onReject) {
     if (onResolve || onReject)
         return originalPush.call(this, location, onResolve, onReject)
@@ -23,16 +23,16 @@ VueRouter.prototype.push = function push(location, onResolve, onReject) {
 const originalReplace = VueRouter.prototype.replace;
 VueRouter.prototype.replace = function replace(location, onResolve, onReject) {
     if (onResolve || onReject){
-        //回调函数里面会用到this的指向,所以就要使用call
+     
         return originalReplace.call(this, location, onResolve, onReject)
     }
     return originalReplace.call(this, location).catch((err) => {
         if (VueRouter.isNavigationFailure(err)) {
-            //如果为相同链接引发的错误,返回错误原因,promise状态为resolve
-            // resolve err
+          
+           
             return err
         }
-        // rethrow error
+     
         return Promise.reject(err)
     })
 }
@@ -87,12 +87,7 @@ router.beforeEach(async (to,from,next) => {
             next("/login?redirect="+to.path);
         }
         next();
-        //先关闭
-        // if(to.path.indexOf("/trade") ==0 || to.path.startsWith("/pay") || to.path.startsWith("/center")){
-        //     next("/login?redirect="+to.path);
-        // }else{
-        //     next();
-        // }
+        
     }
 });
 export default router;

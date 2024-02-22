@@ -1,14 +1,7 @@
-// import Home from "@/pages/Home"
+
 const Home = () => import("@/pages/Home")
-// 相当于
-// const Home = function(){
-//     return import("@/pages/Home")
-// }
-//路由懒加载模式
 const Login = () => import("@/pages/Login")
-
 const Search = () => import("@/pages/Search")
-
 const ProductDetail = () => import("@/pages/ProductDetail")
 const ShopCart = () => import("@/pages/ShopCart")
 const Trade = () => import("@/pages/Trade")
@@ -29,7 +22,6 @@ export default [
         component:Pay,
         //只有从交易页面(创建订单)页面才能跳转到支付页面
         beforeEnter:(to,from,next) => {
-            console.log(from.path,'from.path ');
             if(from.path === '/trade' || from.path === '/account' || from.path.includes('orderDetail')){
                 next();
             }else{

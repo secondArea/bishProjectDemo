@@ -4,8 +4,6 @@ import vuex from "vuex"
 import home from "./modules/home"
 import user from "./modules/user"
 import search from "./modules/search"
-import detail from "./modules/detail"
-import shopcart from "./modules/shopcart"
 import trade from "./modules/trade"
 import product from './modules/product'
 import car from "./modules/car"
@@ -29,8 +27,6 @@ export default new vuex.Store({
         home,
         user,
         search,
-        detail,
-        shopcart,
         trade,
         product,
         car

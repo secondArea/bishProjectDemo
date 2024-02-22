@@ -13,14 +13,14 @@
           <div class="content">
             <form action="##">
               <div class="input-text clearFix">
-                <span></span>
+                <!-- <span></span> -->
 
                 <input type="text" placeholder="用户名" v-model="username" name="用户名"
     v-validate="{ required: true }" :class="{ invalid: errors.has('用户名') }">
   <div class="error-msg">{{ errors.first("用户名") }}</div>
               </div>
               <div class="input-text clearFix"> 
-                <span class="pwd"></span>
+                <!-- <span class="pwd"></span> -->
                 <!-- <input type="text" placeholder="请输入密码" v-model="password"> -->
                 <input type="password" autocomplete placeholder="请输入密码" v-model="password"
                  name="密码" v-validate="{required:true,min:6}" :class="{invalid:errors.has('密码')}">
@@ -184,7 +184,7 @@
                 width: 37px;
                 height: 32px;
                 border: 1px solid #ccc;
-                background: url('@/assets/image/icons.png') no-repeat -10px -201px;
+         
                 box-sizing: border-box;
                 border-radius: 2px 0 0 2px;
               }
@@ -198,7 +198,7 @@
                 height: 32px;
                 box-sizing: border-box;
                 border: 1px solid #ccc;
-                border-left: none;
+
                 float: left;
                 padding-top: 6px;
                 padding-bottom: 6px;

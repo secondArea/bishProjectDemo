@@ -412,11 +412,11 @@
           position: absolute;
           right: 0;
           bottom: 0;
-          background: url(./images/choosed.png) no-repeat;
+    
         }
 
         .username.selected {
-          border-color: #e1251b;
+          border-color: var(--primary-color);
         }
 
         .username.selected::after {

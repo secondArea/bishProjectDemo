@@ -104,7 +104,7 @@ export default {
             }
         },
         loadMore() {
-            console.log(66666);
+
             if (this.hasMore && !this.loading) {
                 this.loading = true
                 setTimeout(() => {

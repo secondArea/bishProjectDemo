@@ -325,7 +325,7 @@ export default {
         this.$message.success("修改地址信息成功!");
       } else {
         this.$message.success("修改失败!");
-        console.log(result);
+
       }
     },
     

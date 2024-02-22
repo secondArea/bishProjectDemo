@@ -3,7 +3,7 @@
   <div class="type-nav">
     <div class="container">
        
-      <!-- 嵌套一个外层div,这样子就可以实现全部商品分类和item中不会移出鼠标 -->
+     
       <div @mouseleave="hideFirst" @mouseenter="showFirst" class="container-sub">
         <h2 class="all">目录</h2>
         <transition name="slide">
@@ -45,40 +45,34 @@ export default {
   name: "Nav",
   data() {
     return {
-      //当前显示的分类栏
+      
       currentIndex: -2,
-      //控制一级分类栏是否显示
+     
       isShowFirst:this.$route.path==="/"
     };
   },
   computed: {
-    //获取三级分类 方法1
-    // baseCategoryList(){
-    //   return this.$store.state.home.baseCategoryList;
-    // }
-    //获取三级分类 方法2
-    // 映射数据
+    
     ...mapState({
       baseCategoryList: (state) => state.home.baseCategoryList,
     }),
   },
   methods: {
     
-    /* 显示当前指向的分类列表  */
-    // 使用节流,隔一段时间就调用,注意不能使用箭头函数
+    
     showCurrentItem:throttle(function(index){
       if(this.currentIndex!=-2){
         this.currentIndex=index;
       }
     },200),
     
-    /* 鼠标进入,显示一级分类 */
+    
     showFirst(){
       this.currentIndex=-1;
       // this.isShowFirst=true;
     },
     
-    /* 鼠标移出去,隐藏一级分类 */
+   
     hideFirst(){
       if(this.$route.path!=="/"){
         this.isShowFirst=false;
